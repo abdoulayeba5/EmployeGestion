@@ -1,5 +1,6 @@
 package com.example.test.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -11,7 +12,8 @@ public class Departement {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy ="departement" ,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy ="departement" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Employe> employes;
 
     public Departement(String name) {

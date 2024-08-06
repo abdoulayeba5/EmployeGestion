@@ -15,6 +15,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -40,29 +42,30 @@ public class SecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/employe/**").hasRole("admin")
-                        .requestMatchers("/dep/**").hasRole("admin")
+                        .requestMatchers("/employe/**").authenticated()
+                        .requestMatchers("/dep/**").authenticated()
                         .requestMatchers("/registre").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .httpBasic(Customizer.withDefaults())
+                .formLogin(formlogin -> formlogin.permitAll())
                 .build();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return new InMemoryUserDetailsManager(
-//                User.withUsername("toto")
-//                        .password(passwordEncoder().encode("3333"))
-//                        .roles("user")
-//                        .build(),
-//                User.withUsername("tata")
-//                        .password(passwordEncoder().encode("3333"))
-//                        .roles("admin")
-//                        .build()
-//        );
-//    }
+    @Bean
+    public UserDetailsService userDetailsService1() {
+        return new InMemoryUserDetailsManager(
+                User.withUsername("toto")
+                        .password(passwordEncoder().encode("3333"))
+                        .roles("user")
+                        .build(),
+                User.withUsername("tata")
+                        .password(passwordEncoder().encode("3333"))
+                        .roles("admin")
+                        .build()
+        );
+    }
 
 
     @Bean
