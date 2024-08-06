@@ -1,9 +1,11 @@
 package com.example.test.controller;
 
+import com.example.test.entity.AppRole;
 import com.example.test.entity.Employe;
 import com.example.test.repository.EmployeRepository;
 import com.example.test.service.EmployeFilterService;
 import com.example.test.service.EmployeMenageService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,19 +58,9 @@ public class EmployeController {
       return MenageService.deleteEmployeById(id);
     }
 
-    @GetMapping("/role/{role}")
-    public List<Employe> employeRole(@PathVariable("role") String role){
-        return Service.employeRole(role);
-    }
 
-    @GetMapping("/dep/{dep}")
-    public List<Employe> employeDep(@PathVariable("dep") String dep){
-        return Service.employeDep(dep);
-
+    @GetMapping("/Filter")
+    public List<Employe> employeFilter(@PathParam("role") AppRole role , @PathParam("age") Long age, @PathParam("dep") String dep) {
+        return Service.getAll(role,age,dep);
     }
-    @GetMapping("/age/{min},{max}")
-    public List<Employe> employeMaxAge(@PathVariable("min") int min, @PathVariable("max") int max) {
-      return Service.employeMaxAge(min,max);
-    }
-
 }

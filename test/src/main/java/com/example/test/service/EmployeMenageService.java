@@ -1,6 +1,8 @@
 package com.example.test.service;
 
+import com.example.test.entity.Departement;
 import com.example.test.entity.Employe;
+import com.example.test.repository.DepartementRepository;
 import com.example.test.repository.EmployeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,9 @@ public class EmployeMenageService {
 
     @Autowired
     private EmployeRepository Repository;
+
+    @Autowired
+    private DepartementRepository depRepository;
 
     public ResponseEntity<List<Employe>> getAllEmployes(){
         try {
@@ -46,20 +51,27 @@ public class EmployeMenageService {
         }
     }
 
-    public ResponseEntity<Employe> createEmploye( Employe employe) {
+    public ResponseEntity<Employe> createEmploye(Employe employe) {
         try {
-            Employe _employe =Repository.save(new Employe( employe.getRef(),employe.getAge(),employe.getRole(),employe.getDepartement()));
-            return new ResponseEntity<Employe>(_employe, HttpStatus.OK);
+            Optional<Departement> dep = depRepository.findById(employe.getDepartement().getId());
+            if (dep.isPresent()) {
+                Employe _employe = Repository.save(new Employe(employe.getRef(), employe.getAge(), employe.getRole(), dep.get()));
+                return new ResponseEntity<>(_employe, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-        }}
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     public ResponseEntity<Employe> updateEmploye(Long id, Employe employe) {
         Optional<Employe> employeData = Repository.findById(id);
+        Optional<Departement> dep = depRepository.findById(employe.getDepartement().getId());
         if(employeData.isPresent()) {
             Employe _employe =employeData.get();
             _employe.setRef(employe.getRef());
-            _employe.setDepartement(employe.getDepartement());
+            _employe.setDepartement(dep.get());
 
             return new ResponseEntity<Employe>(Repository.save(_employe),HttpStatus.OK);
         }

@@ -1,5 +1,6 @@
 package com.example.test.service;
 
+import com.example.test.entity.AppRole;
 import com.example.test.entity.Employe;
 import com.example.test.repository.EmployeRepository;
 import com.example.test.specification.EmployeSpecification;
@@ -15,23 +16,24 @@ public class EmployeFilterService {
     private EmployeRepository Repository;
 
 
-    public List<Employe> employeDep( String dep){
-        System.out.println(dep);
-        Specification<Employe> spec=Specification.where(EmployeSpecification.hasDep(dep));
-        return Repository.findAll(spec);
 
-    }
     public List<Employe> employeMaxAge(int min,int max) {
-        System.out.println("Min age: " + min + ", Max age: " + max);
         Specification<Employe> spec = Specification.where(EmployeSpecification.hasAge(min, max));
         return Repository.findAll(spec);
     }
 
-    public List<Employe> employeRole(String role){
-        System.out.println(role);
-        Specification<Employe> spec=Specification.where(EmployeSpecification.HasRole(role));
-        return Repository.findAll(spec);
 
+    public List<Employe> getAll(AppRole role, Long age,String dep) {
+
+        Specification<Employe> spec = Specification.where(
+
+                role ==null? null:EmployeSpecification.HasRole(role)
+                ).and(
+                        age == null? null:EmployeSpecification.filterByAge(age)
+        ).and(
+                dep ==null?null : EmployeSpecification.FilterByDep(dep)
+        );
+        return Repository.findAll(spec);
     }
 
 }
