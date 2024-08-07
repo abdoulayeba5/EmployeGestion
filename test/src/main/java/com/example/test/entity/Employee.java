@@ -1,11 +1,10 @@
 package com.example.test.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
 
-public class Employe{
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -16,15 +15,15 @@ public class Employe{
 
 
     @ManyToOne()
-    @JoinColumn(name = "departement_id",referencedColumnName = "id")
+    @JoinColumn(name = "department_id",referencedColumnName = "id")
 //    @JsonManagedReference
-    private Departement departement;
+    private Department department;
 
-    public Employe(String ref, Long age,AppRole role, Departement departement) {
+    public Employee(String ref, Long age, AppRole role, Department department) {
         this.ref = ref;
         this.age = age;
         this.role=role;
-        this.departement = departement;
+        this.department = department;
     }
 
     public AppRole getRole() {
@@ -43,7 +42,7 @@ public class Employe{
         this.age = age;
     }
 
-    public Employe() {
+    public Employee() {
     }
 
     public String getRef() {
@@ -54,11 +53,11 @@ public class Employe{
         this.ref = ref;
     }
 
-    public Departement getDepartement() {
-        return departement;
+    public Department getDepartement() {
+        return department;
     }
 
-    public void setDepartement(Departement departement) {
-        this.departement = departement;
+    public void setDepartement(Department department) {
+        this.department = department;
     }
 }

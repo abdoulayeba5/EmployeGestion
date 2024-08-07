@@ -6,21 +6,21 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-public class Departement {
+public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy ="departement" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy ="department" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
-    private Set<Employe> employes;
+    private Set<Employee> employees;
 
-    public Departement(String name) {
+    public Department(String name) {
         this.name = name;
     }
 
-    public Departement() {
+    public Department() {
     }
 
     public Long getId() {
@@ -35,11 +35,11 @@ public class Departement {
         this.name = name;
     }
 
-    public Set<Employe> getEmployes() {
-        return employes;
+    public Set<Employee> getEmployes() {
+        return employees;
     }
 
-    public void setEmployes(Set<Employe> employes) {
-        this.employes = employes;
+    public void setEmployes(Set<Employee> employees) {
+        this.employees = employees;
     }
 }
